@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" 
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${hospitalName} + ' - Cleaning Management System'">Hospital Cleaning Management</title>
+    
+    <!-- Bootstrap & Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .task-completed {
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        
+        .user-type-btn.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .progress {
+            cursor: pointer;
+        }
+        
+        .progress:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-primary text-white py-3">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-hospital fa-2x me-3"></i>
+            <div>
+                <h1 class="h4 mb-0">Shree Ji Hospital</h1>
+                <p class="mb-0">Rajadhani Road, Ballia</p>
+                <small>Cleaning Management System</small>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/dashboard}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                
+                <!-- Checklists - Everyone -->
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/checklists}">
+                        <i class="fas fa-clipboard-list me-1"></i> Checklists
+                    </a>
+                </li>
+                
+                <!-- Floors & Areas - Only ADMIN & MANAGER -->
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                    <a class="nav-link" th:href="@{/floors}">
+                        <i class="fas fa-building me-1"></i> Floors & Areas
+                    </a>
+                </li>
+                
+                <!-- Staff Management - Only ADMIN & MANAGER -->
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                    <a class="nav-link" th:href="@{/staff}">
+                        <i class="fas fa-users-cog me-1"></i> Staff Management
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- User Profile Dropdown -->
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" 
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i>
+                        <span sec:authentication="name">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" style="display: inline;">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar: Quick Actions -->
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-tachometer-alt me-2"></i> Quick Actions
+                </div>
+                <div class="card-body">
+                    <!-- View My Checklists - Everyone -->
+                    <a th:href="@{/checklists}" class="btn btn-outline-primary w-100 mb-2">
+                        <i class="fas fa-clipboard-check me-2"></i> My Checklists
+                    </a>
+                    
+                    <!-- New Checklist - ADMIN & MANAGER only -->
+                    <a th:href="@{/checklists/create}" 
+                       class="btn btn-primary w-100 mb-2" 
+                       sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <i class="fas fa-plus-circle me-2"></i> New Checklist
+                    </a>
+                    
+                    <!-- Add Staff - ADMIN ONLY -->
+                    <a th:href="@{/staff/add}" 
+                       class="btn btn-outline-success w-100 mb-2" 
+                       sec:authorize="hasRole('ADMIN')">
+                        <i class="fas fa-user-plus me-2"></i> Add Staff
+                    </a>
+                    
+                    <!-- Manage Staff - ADMIN & MANAGER -->
+                    <a th:href="@{/staff}" 
+                       class="btn btn-outline-info w-100 mb-2" 
+                       sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <i class="fas fa-users me-2"></i> Manage Staff
+                    </a>
+                    
+                    <!-- Manage Floors - ADMIN & MANAGER -->
+                    <a th:href="@{/floors}" 
+                       class="btn btn-outline-secondary w-100 mb-2" 
+                       sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <i class="fas fa-building me-2"></i> Floors & Areas
+                    </a>
+                </div>
+            </div>
+            
+            <!-- My Schedule - Interactive -->
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-calendar-alt me-2"></i> My Schedule
+                </div>
+                <div class="card-body">
+                    <h6 class="text-center mb-3">
+                        <i class="fas fa-calendar-day me-1"></i>
+                        <span th:text="${#temporals.format(#temporals.createNow(), 'EEEE, dd MMM yyyy')}">Saturday, 25 Oct 2025</span>
+                    </h6>
+                    
+                    <div class="list-group list-group-flush">
+                        <!-- Display actual assigned checklists -->
+                        <div th:if="${todayActivities != null and !todayActivities.isEmpty()}">
+                            <a th:each="activity : ${todayActivities}" 
+                               th:href="@{/checklists/{id}(id=${activity.id})}"
+                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold" th:text="${activity.name}">OT Cleaning</div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-door-open me-1"></i>
+                                        <span th:text="${activity.areaName}">Operation Theatre</span>
+                                    </small>
+                                </div>
+                                <span class="badge rounded-pill" 
+                                      th:classappend="${activity.status == 'COMPLETED'} ? 'bg-success' : 
+                                                     (${activity.status == 'IN_PROGRESS'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                                      th:text="${activity.status}">PENDING</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Empty state -->
+                        <div th:if="${todayActivities == null or todayActivities.isEmpty()}" 
+                             class="list-group-item text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                            <p class="mb-0">No tasks scheduled</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="mt-3 p-2 bg-light rounded">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small><i class="fas fa-check-circle text-success me-1"></i> Completed:</small>
+                            <strong th:text="${completedToday}">0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small><i class="fas fa-clock text-warning me-1"></i> Pending:</small>
+                            <strong th:text="${pendingChecklists}">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Floor Status - Only ADMIN & MANAGER (Interactive) -->
+            <div class="card" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fas fa-building me-2"></i> Floor Status
+                </div>
+                <div class="card-body">
+                    <div th:each="floor : ${floors}" class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span th:text="${floor.name}">First Floor</span>
+                            <strong th:text="${floor.completionPercentage} + '%'" 
+                                    th:classappend="${floor.completionPercentage >= 80} ? 'text-success' : 
+                                                   (${floor.completionPercentage >= 50} ? 'text-warning' : 'text-danger')">
+                                85%
+                            </strong>
+                        </div>
+                        <div class="progress" style="height: 20px;" 
+                             th:onclick="'window.location.href=\'/hospital-cleaning/floors/' + ${floor.id} + '\''">
+                            <div class="progress-bar" 
+                                 th:classappend="${floor.completionPercentage >= 80} ? 'bg-success' : 
+                                               (${floor.completionPercentage >= 50} ? 'bg-warning' : 'bg-danger')"
+                                 th:style="'width: ' + ${floor.completionPercentage} + '%'"
+                                 role="progressbar"
+                                 th:attr="aria-valuenow=${floor.completionPercentage}"
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-door-open me-1"></i>
+                            <span th:text="${floor.areas != null ? floor.areas.size() : 0}">4</span> areas
+                        </small>
+                    </div>
+                    
+                    <div th:if="${floors == null or floors.isEmpty()}" 
+                         class="text-center text-muted py-3">
+                        <i class="fas fa-inbox fa-2x mb-2"></i>
+                        <p class="mb-0">No floor data available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Dashboard Area -->
+        <div class="col-md-9">
+            <!-- Statistics Cards - Basic Stats for Everyone -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-center bg-primary text-white h-100">
+                        <div class="card-body">
+                            <i class="fas fa-clipboard-list fa-3x mb-2"></i>
+                            <h3 class="mb-1" th:text="${totalCleaningTasks}">42</h3>
+                            <p class="mb-0 fw-bold">My Tasks</p>
+                            <small th:text="${completedToday} + ' completed today'">15 completed</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card text-center bg-warning text-dark h-100">
+                        <div class="card-body">
+                            <i class="fas fa-clock fa-3x mb-2"></i>
+                            <h3 class="mb-1" th:text="${pendingChecklists}">18</h3>
+                            <p class="mb-0 fw-bold">Pending</p>
+                            <small>Need attention</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card text-center bg-success text-white h-100">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-3x mb-2"></i>
+                            <h3 class="mb-1" th:text="${totalChecklists}">38</h3>
+                            <p class="mb-0 fw-bold">Total Checklists</p>
+                            <small>Assigned to you</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Stats - Only ADMIN & MANAGER -->
+            <div class="row mb-4" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                <div class="col-md-4">
+                    <div class="card text-center bg-info text-white h-100">
+                        <div class="card-body">
+                            <i class="fas fa-users fa-3x mb-2"></i>
+                            <h3 class="mb-1" th:text="${totalEmployees}">24</h3>
+                            <p class="mb-0 fw-bold">Total Staff</p>
+                            <small th:text="${onDutyEmployees} + ' on duty'">8 on duty</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card text-center bg-secondary text-white h-100">
+                        <div class="card-body">
+                            <i class="fas fa-building fa-3x mb-2"></i>
+                            <h3 class="mb-1" th:text="${floors != null ? floors.size() : 0}">3</h3>
+                            <p class="mb-0 fw-bold">Floors</p>
+                            <small>Managed</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card text-center bg-dark text-white h-100">
+                        <div class="card-body">
+                            <i class="fas fa-door-open fa-3x mb-2"></i>
+                            <h3 class="mb-1">10</h3>
+                            <p class="mb-0 fw-bold">Areas</p>
+                            <small>Total coverage</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <i class="fas fa-tasks me-2"></i> Recent Activity
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Welcome to Shree Ji Hospital Cleaning Management System!</strong>
+                        <p class="mb-0 mt-2">View and update your assigned checklists from the Checklists menu.</p>
+                    </div>
+                    
+                    <h6>Quick Stats:</h6>
+                    <ul class="list-group">
+                        <!-- Staff sees their own stats -->
+                        <li class="list-group-item d-flex justify-content-between" sec:authorize="hasRole('STAFF')">
+                            <span>My Assigned Checklists</span>
+                            <span class="badge bg-primary rounded-pill" th:text="${totalChecklists}">5</span>
+                        </li>
+                        
+                        <!-- Admin & Manager see all stats -->
+                        <li class="list-group-item d-flex justify-content-between" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                            <span>Total Floors</span>
+                            <span class="badge bg-primary rounded-pill" th:text="${floors != null ? floors.size() : 0}">3</span>
+                        </li>
+                        
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Pending Checklists</span>
+                            <span class="badge bg-warning rounded-pill" th:text="${pendingChecklists}">10</span>
+                        </li>
+                        
+                        <li class="list-group-item d-flex justify-content-between" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                            <span>Active Staff Members</span>
+                            <span class="badge bg-success rounded-pill" th:text="${onDutyEmployees}">8</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white mt-5 py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Shree Ji Hospital</h5>
+                <p class="mb-1">Rajadhani Road, Ballia</p>
+                <p class="text-muted"><em>Cleanliness is Service</em></p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a th:href="@{/dashboard}" class="text-white text-decoration-none">Dashboard</a></li>
+                    <li><a th:href="@{/checklists}" class="text-white text-decoration-none">Checklists</a></li>
+                    <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <a th:href="@{/floors}" class="text-white text-decoration-none">Floors</a>
+                    </li>
+                    <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <a th:href="@{/staff}" class="text-white text-decoration-none">Staff</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Information</h5>
+                <address>
+                    <i class="fas fa-map-marker-alt me-2"></i> Rajadhani Road, Ballia<br>
+                    <i class="fas fa-phone me-2"></i> 05462 XXXXXX<br>
+                    <i class="fas fa-envelope me-2"></i> <a href="mailto:info@shreejihospital.com" class="text-white">info@shreejihospital.com</a>
+                </address>
+            </div>
+        </div>
+        <hr class="bg-white">
+        <p class="text-center mb-0">© 2025 Shree Ji Hospital. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

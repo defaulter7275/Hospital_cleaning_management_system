@@ -1,0 +1,181 @@
+ :root {
+    --primary: #2c6bac;
+    --secondary: #4ca1af;
+    --accent: #36b5b0;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --hospital-blue: #1a6fb0;
+    --hospital-green: #2e8b57;
+ }
+ body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ }
+ .hospital-header {
+    background: linear-gradient(to right, var(--hospital-blue), var(--hospital-green));
+    color: white;
+    padding: 15px 0;
+    border-bottom: 4px solid #ffc107;
+ }
+ .navbar-brand {
+    font-weight: 700;
+    color: white !important;
+ }
+ .card {
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    margin-bottom: 20px;
+    border: none;
+ }
+ .card:hover {
+    transform: translateY(-5px);
+ }
+ .card-header {
+    background: linear-gradient(to right, var(--hospital-blue), var(--hospital-green));
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    font-weight: 600;
+ }
+ .btn-primary {
+    background: linear-gradient(to right, var(--hospital-blue), var(--hospital-green));
+    border: none;
+ }
+ .btn-success {
+    background: linear-gradient(to right, var(--accent), var(--secondary));
+    border: none;
+ }
+ .dashboard-icon {
+    font-size: 24px;
+    color: var(--hospital-blue);
+    margin-bottom: 10px;
+ }
+ .stat-card {
+    text-align: center;
+    padding: 20px;
+ }
+ .stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--hospital-blue);
+ }
+ .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+ .cleaning-item {
+    border-left: 4px solid var(--success);
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+ }
+ .task-completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+ }
+ .user-role {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 15px;
+    background-color: var(--hospital-blue);
+    color: white;
+ }
+ .maintenance-calendar {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+ }
+ .calendar-day {
+    text-align: center;
+    padding: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: pointer;
+ }
+ .calendar-day.has-event {
+    background-color: var(--warning);
+    color: white;
+ }
+ .calendar-day.current-day {
+    background-color: var(--hospital-blue);
+    color: white;
+ }
+ .notification-area {
+    max-height: 300px;
+    overflow-y: auto;
+ }
+ .notification {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--primary);
+ }
+ .notification.warning {
+    border-left-color: var(--warning);
+ }
+ .notification.urgent {
+    border-left-color: var(--danger);
+ }
+ .area-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    margin-right: 0.5rem;
+ }
+ .checklist-container {
+    max-height: 500px;
+    overflow-y: auto;
+ }
+ .checklist-category {
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+ }
+ .hospital-logo {
+    height: 50px;
+    margin-right: 15px;
+ }
+ .floor-badge {
+    background-color: var(--hospital-green);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    margin-left: 10px;
+ }
+ .hindi-text {
+    font-family: Arial, sans-serif;
+ }
+ /* Responsive Design */
+ @media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+ }

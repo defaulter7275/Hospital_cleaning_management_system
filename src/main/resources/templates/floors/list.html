@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Floors - Hospital Cleaning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>All Floors</h2>
+    <a th:href="@{/dashboard}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Floor Name</th>
+                <th>Hindi</th>
+                <th>Areas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="floor : ${floors}">
+                <td th:text="${floor.id}">1</td>
+                <td th:text="${floor.name}">First Floor</td>
+                <td th:text="${floor.nameHindi}">पहली मंजिल</td>
+                <td>
+                    <ul>
+                        <li th:each="area : ${floor.areas}" th:text="${area.name}"></li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

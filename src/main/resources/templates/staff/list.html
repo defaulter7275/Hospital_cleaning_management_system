@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" 
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management - Hospital Cleaning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-users me-2"></i> Staff Management</h2>
+        
+        <!-- Add Staff Button - ADMIN ONLY -->
+        <a th:href="@{/staff/add}" 
+           class="btn btn-primary" 
+           sec:authorize="hasRole('ADMIN')">
+            <i class="fas fa-plus me-2"></i> Add New Staff
+        </a>
+    </div>
+    
+    <!-- Success/Error Messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    
+    <!-- Staff Table -->
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}">1</td>
+                        <td th:text="${user.username}">admin</td>
+                        <td th:text="${user.fullName}">Administrator</td>
+                        <td th:text="${user.email}">admin@hospital.com</td>
+                        <td th:text="${user.phone}">1234567890</td>
+                        <td>
+                            <span class="badge" 
+                                  th:classappend="${user.role.name() == 'ADMIN'} ? 'bg-danger' : 
+                                                 (${user.role.name() == 'MANAGER'} ? 'bg-warning' : 'bg-info')"
+                                  th:text="${user.role}">ADMIN</span>
+                        </td>
+                        <td>
+                            <span class="badge" 
+                                  th:classappend="${user.active} ? 'bg-success' : 'bg-secondary'"
+                                  th:text="${user.active} ? 'Active' : 'Inactive'">Active</span>
+                        </td>
+                        
+                        <!-- Actions - ADMIN ONLY -->
+                        <td sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/staff/{id}/edit(id=${user.id})}" 
+                               class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            
+                            <form th:action="@{/staff/{id}/delete(id=${user.id})}" 
+                                  method="post" 
+                                  style="display: inline;"
+                                  onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a th:href="@{/dashboard}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

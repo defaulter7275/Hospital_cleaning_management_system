@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" 
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Checklist - Hospital Cleaning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4><i class="fas fa-clipboard-list me-2"></i> Checklist Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Name:</strong> <span th:text="${checklist.name}">Daily OT Cleaning</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Status:</strong> 
+                    <span class="badge" 
+                          th:classappend="${checklist.status == 'COMPLETED'} ? 'bg-success' : 
+                                         (${checklist.status == 'IN_PROGRESS'} ? 'bg-warning' : 'bg-secondary')"
+                          th:text="${checklist.status}">PENDING</span>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Floor:</strong> <span th:text="${checklist.floorName}">First Floor</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Area:</strong> <span th:text="${checklist.areaName}">OT</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Assigned To:</strong> <span th:text="${checklist.assignedToName}">John Doe</span>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Created:</strong> 
+                    <span th:text="${checklist.createdAt != null ? #temporals.format(checklist.createdAt, 'dd-MM-yyyy HH:mm') : 'N/A'}">25-10-2025 10:00</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Last Updated:</strong> 
+                    <span th:text="${checklist.updatedAt != null ? #temporals.format(checklist.updatedAt, 'dd-MM-yyyy HH:mm') : 'N/A'}">25-10-2025 10:30</span>
+                </div>
+            </div>
+            
+            <!-- Staff: Update Status Form -->
+            <div class="card bg-light mt-4">
+                <div class="card-body">
+                    <h5>Update Status</h5>
+                    <form th:action="@{/checklists/{id}/status(id=${checklist.id})}" method="post" class="row g-3">
+                        <div class="col-md-8">
+                            <select name="status" class="form-select" required>
+                                <option value="">Select Status</option>
+                                <option value="PENDING" th:selected="${checklist.status == 'PENDING'}">Pending</option>
+                                <option value="IN_PROGRESS" th:selected="${checklist.status == 'IN_PROGRESS'}">In Progress</option>
+                                <option value="COMPLETED" th:selected="${checklist.status == 'COMPLETED'}">Completed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-check me-2"></i> Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a th:href="@{/checklists}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to List
+                </a>
+                
+                <!-- Edit Button - Only ADMIN & MANAGER -->
+                <a th:href="@{/checklists/{id}/edit(id=${checklist.id})}" 
+                   class="btn btn-warning"
+                   sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                    <i class="fas fa-edit me-2"></i> Edit
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

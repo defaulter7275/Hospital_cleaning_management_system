@@ -3,10 +3,13 @@
 A web-based Hospital Cleaning Management System designed to efficiently manage sanitation tasks, staff, floors, and hospital areas. The system ensures hygiene compliance through structured checklists, role-based access, and real-time task tracking.
 
 🔗 **Live Demo:**  
-https://hospital-cleaning-management-system.onrender.com/login
-Admin created: admin / admin123
-Manager created: manager / manager123
-Staff created: staff / staff123
+https://hospital-cleaning-management-system.onrender.com/login  
+
+### 🔑 Demo Credentials
+- **Admin:** admin / admin123  
+- **Manager:** manager / manager123  
+- **Staff:** staff / staff123  
+
 ---
 
 ## 📌 Features
@@ -84,15 +87,6 @@ Staff created: staff / staff123
 
 ---
 
-## 📸 Screenshots
-
-- Login Page  
-- Admin Dashboard  
-- Checklist Management  
-- Staff Management  
-- Floor & Area Management  
-- Schedule & Task Overview  
-
 ## 🚀 Getting Started (Local Setup)
 
 ### Prerequisites
@@ -100,3 +94,12 @@ Staff created: staff / staff123
 - Maven
 - MySQL
 - Git
+
+### Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/hospital-cleaning-management-system.git
+
+# Navigate to the project directory
+cd hospital-cleaning-management-system

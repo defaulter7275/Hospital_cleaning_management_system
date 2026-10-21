@@ -3,7 +3,7 @@
 A web-based Hospital Cleaning Management System designed to efficiently manage sanitation tasks, staff, floors, and hospital areas. The system ensures hygiene compliance through structured checklists, role-based access, and real-time task tracking.
 
 🔗 **Live Demo:**  
-https://hospital-cleaning-management-system.onrender.com/login  
+https://hospital-cleaning-management-system-hjcl.onrender.com/hospital-cleaning/login 
 
 ### 🔑 Demo Credentials
 - **Admin:** admin / admin123  
